@@ -1,0 +1,11 @@
+gunicorn
+gevent
+gevent-websocket
+flask
+flask_socketio
+ytmusicapi
+yt_dlp==2024.7.9
+spotipy
+thefuzz
+watchdog
+python-dotenv
