@@ -30,54 +30,11 @@
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="config-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modal-label">Configuration</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-        </div>
-        <div class="modal-body">
-          <div id="save-message" style="display: none;" class="alert alert-success mt-3">
-            Settings saved successfully.
-          </div>
-          <div class="form-group-modal">
-            <label for="spotify_client_id">Spotify Client ID:</label>
-            <input type="text" class="form-control" id="spotify_client_id" placeholder="Enter Spotify Client ID">
-          </div>
-          <div class="form-group-modal my-4">
-            <label for="spotify_client_secret">Spotify Client Secret:</label>
-            <input type="text" class="form-control" id="spotify_client_secret"
-              placeholder="Enter Spotify Client Secret">
-          </div>
-          <div class="form-group-modal">
-            <label for="sleep_interval">Sleep Interval (Seconds):</label>
-            <input type="number" class="form-control" id="sleep_interval" placeholder="Enter Sleep Interval">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" id="save-changes-button" class="btn btn-primary">Save changes</button>
-          <i class="fa fa-sun"></i>
-          <div class="form-check form-switch">
-            <input class="form-check-input rounded" type="checkbox" id="themeSwitch">
-          </div>
-          <i class="fa fa-moon"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="container mt-5">
     <div class="position-relative rounded-pill shadow-lg">
       <div class="input-group">
         <input id="search-box" type="text" class="form-control rounded-pill z-0" placeholder="Enter Spotify Link">
         <div class="input-group-append position-absolute top-0 end-0">
-          <button class="btn btn-warning left-pill rounded-start-pill" type="button" id="clear-button">Clear
-            List</button>
           <button class="btn btn-primary rounded-end-pill" type="button" id="download-button">Download</button>
         </div>
       </div>

@@ -27,10 +27,9 @@ class DataHandler:
 
         self.spotify_client_id = os.getenv('SPOTIFY_CLIENT_ID')
         self.spotify_client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
-        self.thread_limit = int(os.environ.get("thread_limit", "1"))
+        self.thread_limit = int(os.environ.get('thread_limit', '1'))
         self.sleep_interval = 0
 
-        users = os.getenv("USERS").split(",")
         self.download_folder = os.path.join("downloads")
         self.config_folder = "config"
 
@@ -38,6 +37,8 @@ class DataHandler:
             os.makedirs(self.download_folder)
         if not os.path.exists(self.config_folder):
             os.makedirs(self.config_folder)
+
+        users = os.getenv("USERS").split(",")
 
         for user in users:
             user_download_folder = os.path.join(self.download_folder, user.strip())
@@ -348,38 +349,6 @@ def connection():
     else:
         emit("connection_response", {"Status": "Error", "Message": "User parameter is missing"})
 
-
-@socketio.on("loadSettings")
-def loadSettings(data):
-    user = session.get('user')
-    if user not in data_handlers:
-        emit("settingsLoaded", {"Status": "Error", "Message": "User not connected"})
-        return
-
-    data_handler = data_handlers[user]
-    data = {
-        "spotify_client_id": data_handler.spotify_client_id,
-        "spotify_client_secret": data_handler.spotify_client_secret,
-        "sleep_interval": data_handler.sleep_interval,
-    }
-    socketio.emit("settingsLoaded", data)
-
-
-@socketio.on("updateSettings")
-def updateSettings(data):
-    user = session.get('user')
-    if user not in data_handlers:
-        emit("settingsUpdated", {"Status": "Error", "Message": "User not connected"})
-        return
-
-    data_handler = data_handlers[user]
-    data_handler.spotify_client_id = data["spotify_client_id"]
-    data_handler.spotify_client_secret = data["spotify_client_secret"]
-    data_handler.sleep_interval = int(data["sleep_interval"])
-
-    socketio.emit("settingsUpdated", {"Status": "Success"})
-
-
 @socketio.on("disconnect")
 def disconnect():
     user = session.get('user')
@@ -391,25 +360,6 @@ def disconnect():
         data_handler.monitor_active_flag = False
         del data_handlers[user]
     emit("disconnected", {"Status": "Success", "User": user})
-
-
-@socketio.on("clear")
-def clear(data):
-    user = session.get('user')
-    if user not in data_handlers:
-        emit("cleared", {"Status": "Error", "Message": "User not connected"})
-        return
-
-    data_handler = data_handlers[user]
-    data_handler.logger.warning("Clear List Request")
-    data_handler.stop_downloading_event.set()
-    for future in data_handler.futures:
-        if not future.done():
-            future.cancel()
-    if data_handler.running_flag == False:
-        data_handler.download_list = []
-        data_handler.futures = []
-    emit("cleared", {"Status": "Success"})
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=5002)
