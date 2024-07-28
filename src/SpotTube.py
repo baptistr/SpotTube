@@ -12,6 +12,7 @@ import yt_dlp
 import concurrent.futures
 from thefuzz import fuzz
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -279,10 +280,10 @@ class DataHandler:
         cleaned_string = temp_string.strip()
         return cleaned_string
 
-
 app = Flask(__name__)
 app.secret_key = "secret_key"
-socketio = SocketIO(app)
+CORS(app, origins=["http://localhost:3000"])
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route("/")
 def home():
