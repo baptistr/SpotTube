@@ -5,7 +5,7 @@ gunicorn
 gevent
 gevent-websocket
 ytmusicapi
-yt_dlp==2024.07.25
+yt_dlp==2024.08.01
 spotipy
 thefuzz
 watchdog

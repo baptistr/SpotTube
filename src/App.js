@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const MusicDownloader = () => {
     const [searchValue, setSearchValue] = useState('');
@@ -49,19 +48,19 @@ const MusicDownloader = () => {
         const progressBar = progressBarRef.current;
         progressBar.style.width = `${percentage}%`;
         progressBar.setAttribute('aria-valuenow', percentage);
-        progressBar.classList.remove('progress-bar-striped', 'progress-bar-animated', 'bg-primary', 'bg-danger', 'bg-dark', 'bg-success');
+        progressBar.className = '';
 
         if (status === 'Running') {
-            progressBar.classList.add('bg-success', 'progress-bar-animated');
+            progressBar.classList.add('bg-violet-600', 'animate-pulse');
         } else if (status === 'Stopped') {
-            progressBar.classList.add('bg-danger');
+            progressBar.classList.add('bg-red-600');
         } else if (status === 'Idle') {
-            progressBar.classList.add('bg-primary');
+            progressBar.classList.add('bg-blue-600');
         } else if (status === 'Complete') {
-            progressBar.classList.add('bg-dark');
+            progressBar.classList.add('bg-gray-800');
         }
 
-        progressBar.classList.add('progress-bar-striped');
+        progressBar.classList.add('h-full');
     };
 
     const handleDownloadClick = () => {
@@ -75,51 +74,52 @@ const MusicDownloader = () => {
     };
 
     return (
-        <div className="bg-secondary-subtle vh-100">
-            <div className="container-fluid bg-dark">
-                <div className="top-bar d-flex justify-content-between align-items-center">
-                    <h1 className="title text-center text-light flex-grow-1">Music Downloader</h1>
+        <div className="bg-gray-100 min-h-screen">
+            <div className="bg-violet-800 py-4">
+                <div className="container mx-auto text-center">
+                    <h1 className="text-white text-3xl">Music Downloader</h1>
                 </div>
             </div>
 
-            <div className="container mt-5">
-                <div className="position-relative rounded-pill shadow-lg">
-                    <div className="input-group">
-                        <input
-                            id="search-box"
-                            type="text"
-                            className="form-control rounded-pill z-0"
-                            placeholder="Enter Spotify Link"
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            onKeyDown={handleSearchKeyDown}
-                        />
-                        <div className="input-group-append position-absolute top-0 end-0">
-                            <button className="btn btn-primary rounded-end-pill" type="button" id="download-button" onClick={handleDownloadClick}>
-                                Download
-                            </button>
-                        </div>
-                    </div>
+            <div className="container mx-auto mt-10">
+                <div className="relative shadow-lg rounded-lg overflow-hidden">
+                    <input
+                        id="search-box"
+                        type="text"
+                        className="w-full p-4 rounded-t-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
+                        placeholder="Enter Spotify Link"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        onKeyDown={handleSearchKeyDown}
+                    />
+                    <button
+                        className="absolute top-0 right-0 mt-2 mr-2 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
+                        type="button"
+                        id="download-button"
+                        onClick={handleDownloadClick}
+                    >
+                        Download
+                    </button>
                 </div>
             </div>
 
-            <div className="container mt-4">
-                <h2 className="text-center me-2 mb-2">Import List</h2>
-                <div id="table-box" className="shadow-lg rounded">
-                    <table id="progress-table" className="table table-hover mb-0">
-                        <thead className="bg-primary-subtle sticky-top top-0">
+            <div className="container mx-auto mt-6">
+                <h2 className="text-center text-2xl mb-4">Import List</h2>
+                <div className="shadow-lg rounded-lg overflow-hidden">
+                    <table id="progress-table" className="w-full table-auto">
+                        <thead className="bg-violet-200">
                             <tr>
-                                <th>Artist</th>
-                                <th>Title</th>
-                                <th>Status</th>
+                                <th className="px-4 py-2">Artist</th>
+                                <th className="px-4 py-2">Title</th>
+                                <th className="px-4 py-2">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {progressData.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.Artist}</td>
-                                    <td>{item.Title}</td>
-                                    <td>{item.Status}</td>
+                                <tr key={index} className="bg-white border-b">
+                                    <td className="px-4 py-2">{item.Artist}</td>
+                                    <td className="px-4 py-2">{item.Title}</td>
+                                    <td className="px-4 py-2">{item.Status}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -127,10 +127,10 @@ const MusicDownloader = () => {
                 </div>
             </div>
 
-            <footer>
-                <div className="container mb-3 fixed-bottom">
-                    <div id="progress-status-bar" className="progress">
-                        <div ref={progressBarRef} className="progress-bar-striped bg-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            <footer className="fixed bottom-0 w-full">
+                <div className="container mx-auto mb-4">
+                    <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+                        <div ref={progressBarRef} className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-500"></div>
                     </div>
                 </div>
             </footer>
