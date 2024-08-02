@@ -102,8 +102,14 @@ const MusicDownloader = () => {
                         {loading && (
                             <div className="border-violet-300 h-5 w-5 animate-spin rounded-full border-4 border-t-violet-600" />
                         )}
-
-                        Download
+                        <span>Download</span>
+                        {progressData.length > 0 && (
+                            <div className='flex gap-2'>
+                                <span className="font-bold">{progressData.filter((item) => !['Queued', 'Link Found'].includes(item.Status)).length}</span>
+                                /
+                                <span className="font-bold">{progressData.length}</span>
+                            </div>
+                        )}
                     </button>
                     <input
                         id="search-box"
