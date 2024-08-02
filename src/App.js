@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 
 const MusicDownloader = () => {
     const [searchValue, setSearchValue] = useState('');
+    const [loading, setLoading] = useState(false);
     const [progressData, setProgressData] = useState([]);
     const [progressPercentage, setProgressPercentage] = useState(0);
     const [progressStatus, setProgressStatus] = useState('Idle');
@@ -22,6 +23,7 @@ const MusicDownloader = () => {
             if (response.Status === 'Success') {
                 setSearchValue('');
             } else {
+                setLoading(false);
                 setSearchValue(response.Data);
                 setTimeout(() => {
                     setSearchValue('');
@@ -42,6 +44,11 @@ const MusicDownloader = () => {
 
     useEffect(() => {
         updateProgressBar(progressPercentage, progressStatus);
+
+        if (progressPercentage === 100) {
+            setLoading(false);
+        }
+
     }, [progressPercentage, progressStatus]);
 
     const updateProgressBar = (percentage, status) => {
@@ -65,11 +72,13 @@ const MusicDownloader = () => {
 
     const handleDownloadClick = () => {
         socketRef.current.emit('download', { Link: searchValue });
+        setLoading(true);
     };
 
     const handleSearchKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            socketRef.current.emit('download', { Link: searchValue });
+        if (['Enter', ' '].includes(event.key)) {
+            event.preventDefault();
+            handleDownloadClick();
         }
     };
 
@@ -82,24 +91,30 @@ const MusicDownloader = () => {
             </div>
 
             <div className="container mx-auto mt-10">
-                <div className="relative shadow-lg rounded-lg overflow-hidden">
+                <div className="relative rounded-lg overflow-hidden flex items-center gap-4">
+                    <button
+                        className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 disabled:bg-gray-300 disabled:text-gray-500 flex gap-3 items-center"
+                        type="button"
+                        id="download-button"
+                        onClick={handleDownloadClick}
+                        disabled={!searchValue || loading}
+                    >
+                        {loading && (
+                            <div className="border-violet-300 h-5 w-5 animate-spin rounded-full border-4 border-t-violet-600" />
+                        )}
+
+                        Download
+                    </button>
                     <input
                         id="search-box"
                         type="text"
-                        className="w-full p-4 rounded-t-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
+                        className="w-full p-2 rounded-t-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
                         placeholder="Enter Spotify Link"
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
                         onKeyDown={handleSearchKeyDown}
+                        disabled={loading}
                     />
-                    <button
-                        className="absolute top-0 right-0 mt-2 mr-2 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
-                        type="button"
-                        id="download-button"
-                        onClick={handleDownloadClick}
-                    >
-                        Download
-                    </button>
                 </div>
             </div>
 
