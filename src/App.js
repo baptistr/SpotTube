@@ -124,7 +124,7 @@ const MusicDownloader = () => {
                 </div>
             </div>
 
-            <div className="container mx-auto mt-6">
+            <div className="container mx-auto my-6">
                 <h2 className="text-center text-2xl mb-4">Import List</h2>
                 <div className="shadow-lg rounded-lg overflow-hidden">
                     <table id="progress-table" className="w-full table-auto">
